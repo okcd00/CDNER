@@ -18,7 +18,6 @@ __pycache__/
 env/
 /figures/
 /output_dir/
-/*.txt
 /*.json
 /*.ipynb
 build/
