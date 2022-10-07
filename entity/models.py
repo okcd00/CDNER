@@ -31,9 +31,9 @@ logger = logging.getLogger('root')
 class BertForEntity(BertPreTrainedModel):
     def __init__(self, config, 
                  num_ner_labels,
-                 max_span_length=10,
+                 max_span_length=25,
                  head_hidden_dim=150,
-                 width_embedding_dim=150,
+                 width_embedding_dim=25,
                  args=None,):
         super().__init__(config)
 
@@ -43,7 +43,7 @@ class BertForEntity(BertPreTrainedModel):
         self.num_ner_labels = num_ner_labels
         self.max_span_length = max_span_length
         self.head_hidden_dim = head_hidden_dim
-        self.width_embedding_dim = width_embedding_dim
+        self.width_embedding_dim = max_span_length  # width_embedding_dim=150 or 25
         # self.span_filter_hp = float(args.span_filter_hp) if args else None
         # self.span_filter_strategy = str(args.span_filter_strategy) if args else None
         
@@ -136,7 +136,6 @@ class BertForEntity(BertPreTrainedModel):
 
         self.n_attention_heads = 12  # "num_attention_heads": 12
         self.n_attention_layers = 0  # we take the beginning/last k layers
-        self.take_name_attn = self.n_attention_layers > 0
         self.get_attention_direction = 'begin'
 
     def init_for_context_module(self):
@@ -203,7 +202,7 @@ class BertForEntity(BertPreTrainedModel):
                 else:
                     self.inp_dim += self.context_hidden_size * sum([
                         self.take_ctx_left, self.take_ctx_right])
-            if self.take_name_attn:
+            if self.n_attention_layers > 0:
                 self.inp_dim += self.n_attention_layers * self.n_attention_heads
 
     def token_embeddings(self, input_ids, token_type_ids=None, attention_mask=None):
@@ -401,8 +400,8 @@ class BertForEntity(BertPreTrainedModel):
         return max_pooling_hidden
 
     def _add_span_width_embeddings(self, spans, other_tensor=None):
-        # width embeddings
         if self.take_width_feature:
+            # width embeddings
             spans_width = spans[:, :, 2].view(spans.size(0), -1)
             spans_width = torch.clamp(
                 spans_width, min=None, max=self.max_span_length)
@@ -421,13 +420,12 @@ class BertForEntity(BertPreTrainedModel):
 
     def _get_span_embeddings(self, input_ids, spans, token_type_ids=None, attention_mask=None):
         embedding_case = []
-        output_attentions = self.n_attention_layers > 0
         try:
             outputs = self.bert(  # 
                 input_ids=input_ids,  # [batch_size, sequence_length]
                 token_type_ids=token_type_ids,
                 attention_mask=attention_mask,
-                output_attentions=output_attentions,
+                output_attentions=self.n_attention_layers > 0,
                 output_hidden_states=False
             )
             # Sequence of hidden-states at the output of the last layer of the model.
@@ -475,7 +473,7 @@ class BertForEntity(BertPreTrainedModel):
         # name hidden vectors: [batch, n_span]
         spans_start = spans[:, :, 0].view(spans.size(0), -1)
         spans_end = spans[:, :, 1].view(spans.size(0), -1)
-        if output_attentions:
+        if self.n_attention_layers > 0:
             # [2, 5] from 10x10 -> 25
             spans_flatten_indexes = (spans_start * input_ids.size(1) + spans_end)  
             # print(spans_flatten_indexes.shape)
