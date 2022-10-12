@@ -76,18 +76,18 @@ task_tag_dicts = {
 task_max_span_length = {
     # Chinese Corpus
     'msra': 25,  # PER<18, COM<36, LOC<25
-    'weibo': 12,
-    'onto4': 16,
-    'onto5': 20,
-    'resume': 16,
-    'ccks': 18,
-    'findoc': 40,  #
+    'weibo': 12,  # 
+    'onto4': 16,  # 
+    'onto5': 20,  # 
+    'resume': 16,  # 
+    'ccks': 18,  # 
+    'findoc': 40,  # 
     'unity': 40,  # msra, resume, onto4, findoc
 
     # English Corpus
-    'ace04': 8,
-    'ace05': 8,
-    'scierc': 8,
+    'ace04': 8, 
+    'ace05': 8, 
+    'scierc': 8, 
 }
 
 
