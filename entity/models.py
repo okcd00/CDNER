@@ -188,14 +188,15 @@ class BertForEntity(BertPreTrainedModel):
             self.module_node = fusion_mlp
         elif 'affine' in self.feature_fusion.method:
             from modules.bi_affine import Biaffine
-            bi_affine = Biaffine(n_in=self.context_hidden_size, n_out=1)
-            self.module_node = bi_affine
+            self.module_node = Biaffine(n_in=self.context_hidden_size, n_out=1)
             self.inp_dim += self.context_hidden_size  # now sum, next try {max, concat}
         else:
             self.module_node = None  # 'none' / 'concat'
             if self.take_name_module:
                 self.inp_dim += self.name_hidden_size * sum([
                     self.take_name_left, self.take_name_right])
+            # from modules.bi_affine import Biaffine
+            # to calculate (h_i^T U h_j), Biaffine(n_in=self.name_hidden_size, n_out=1)
             if self.take_context_module:
                 if self.args.take_context_attn:
                     self.inp_dim += self.context_hidden_size
@@ -787,24 +788,13 @@ class EntityModel():
             # vocab_name = bert_model_name + 'vocab.txt'
             vocab_name = bert_model_name
             logger.info('Loading BERT model from {}'.format(bert_model_name))
-
-        if args.use_albert:
-            logger.info("Use Albert for testing.")
-            # self.tokenizer = AlbertTokenizer.from_pretrained(vocab_name)
-            from .model_albert import AlbertForEntity
-            self.tokenizer = BertTokenizer.from_pretrained(vocab_name)
-            self.bert_model = AlbertForEntity.from_pretrained(
-                bert_model_name,
-                num_ner_labels=num_ner_labels,
-                max_span_length=args.max_span_length,
-                args=args)
-        else:
-            self.tokenizer = BertTokenizer.from_pretrained(vocab_name)
-            self.bert_model = BertForEntity.from_pretrained(
-                bert_model_name,
-                num_ner_labels=num_ner_labels,
-                max_span_length=args.max_span_length,
-                args=args)
+        
+        self.tokenizer = BertTokenizer.from_pretrained(vocab_name)
+        self.bert_model = BertForEntity.from_pretrained(
+            bert_model_name,
+            num_ner_labels=num_ner_labels,
+            max_span_length=args.max_span_length,
+            args=args)
 
         self._model_device = 'cpu'
         self.move_model_to_cuda()
