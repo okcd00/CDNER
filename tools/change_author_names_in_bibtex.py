@@ -6,7 +6,8 @@ def change(author_str):
         authors[i] = f'{last_name}, {_str[:-len(last_name)].strip()}'
     return ' and '.join(authors)
 
-if __name__ == "__main__":
+
+def test():
     text = """
     Yi Luan and Luheng He and Mari Ostendorf and Hannaneh Hajishirzi
     Luheng He and Kenton Lee and Omer Levy and Luke Zettlemoyer
@@ -15,9 +16,24 @@ if __name__ == "__main__":
     Dou Hu and Lingwei Wei
     Yuyang Nie and Yuanhe Tian and Yan Song and Xiang Ao and Xiang Wan
     Ruiqing Zhang and Chao Pang and Chuanqiang Zhang and Shuohuan Wang and Zhongjun He and Yu Sun and Hua Wu and Haifeng Wang
+    Shan Zhao and Minghao Hu and Zhiping Cai and Haiwen Chen and Fang Liu
     """
     
     for _line in text.split('\n'):
         _line = _line.strip()
         if _line:
             print(change(_line))
+
+
+def commands():
+    while True:
+        text = input().strip()
+        for _line in text.split('\n'):
+            _line = _line.strip()
+            if _line:
+                print(change(_line))
+
+
+if __name__ == "__main__":
+    test()
+    # commands()
