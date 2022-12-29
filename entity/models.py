@@ -1,3 +1,14 @@
+# coding: utf-8
+# ==========================================================================
+#   Copyright (C) since 2021 All rights reserved.
+#
+#   filename : name_context_model.py
+#   author   : chendian / okcd00@qq.com
+#   date     : since 2021
+#   refer    : https://github.com/princeton-nlp/PURE
+#   desc     : NameContextModel Framework, but in PURE-style.
+# ==========================================================================
+
 # pytorch packages
 import torch
 from torch import nn
