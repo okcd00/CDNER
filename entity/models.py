@@ -94,6 +94,11 @@ class BertForEntity(BertPreTrainedModel):
         self.take_context_module = args.take_context_module if args else False
         if self.take_context_module:
             self.init_for_context_module()
+
+        if self.take_name_module or self.take_context_module:
+            self.n_attention_heads = 12  # "num_attention_heads": 12
+            self.n_attention_layers = 0  # we take the beginning/last k layers
+            self.get_attention_direction = 'begin'
         
         # special tokens
         self.add_pad = torch.nn.ConstantPad2d((0, 1, 0, 0), 0)  # [PAD]
@@ -144,10 +149,6 @@ class BertForEntity(BertPreTrainedModel):
         self.name_lef_vs_rig = list(map(float, [
             self.take_name_left, self.take_name_right]))
         self.name_hidden_size = self.config.hidden_size  # 768
-
-        self.n_attention_heads = 12  # "num_attention_heads": 12
-        self.n_attention_layers = 0  # we take the beginning/last k layers
-        self.get_attention_direction = 'begin'
 
     def init_for_context_module(self):
         self.take_ctx_left = self.args.boundary_token in ['both', 'left', 'lef']
@@ -606,7 +607,7 @@ class BertForEntity(BertPreTrainedModel):
                 select_count = candidates_counts * sample_hp
             elif sample_method in ['count', 'counts']:
                 # n samples x k count/sample
-                select_count = logits.shape[0] * sample_hp
+                select_count = int(logits.shape[0] * sample_hp)
             elif sample_method in ['time', 'times', 'ratio']:
                 # k times positive span counts  
                 select_count = int(max(1, max(1, positive_counts) * sample_hp))
@@ -753,7 +754,7 @@ class BertForEntity(BertPreTrainedModel):
                 # print(active_ner_labels.shape)
                 # print(active_ner_labels)
                 # alpha loss
-                if False and (spans_alpha_label is not None) and (alpha is not None):
+                if (spans_alpha_label is not None) and (alpha is not None):
                     active_alpha_logits = alpha.view(-1, alpha.shape[-1])
                     active_alpha_labels = torch.where(
                         active_loss, spans_alpha_label.view(-1), 

@@ -2,6 +2,7 @@
 .DS_Store
 __pycache__
 lightning_logs
+inv_test*.json
 /.vscode/
 /.virtual_documents/
 
