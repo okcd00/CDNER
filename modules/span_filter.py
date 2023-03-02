@@ -5,7 +5,7 @@
 #   filename : span_filter.py
 #   author   : chendian / okcd00@qq.com
 #   date     : 2021-07-02
-#   desc     :
+#   desc     : runners are simple LSTM-CRF / BERT-CRF models.
 # ==========================================================================
 import os
 import copy
@@ -14,7 +14,6 @@ import torch
 import pickle
 import random
 import numpy as np
-import jsonlines
 from tqdm import tqdm
 import torch.nn.functional as F
 
@@ -24,6 +23,8 @@ def load_runners():
     import sys
     sys.path.append('/home/chendian/UTIE/')
     sys.path.append('/home/chendian/doc_ner/')
+    # runners are simple LSTM-CRF / BERT-CRF models. 
+    # (for online-prediction, not provided here)
     from modules.runner_binary import Runner as bin_runner
     from modules.runner_boundary import Runner as bdy_runner
     # from modules.runner_crf import Runner as crf_runner
@@ -496,4 +497,6 @@ class SpanFilter(object):
         
 
 if __name__ == "__main__":
-    generate_inv_500_files()
+    # generate_inv_500_files()
+    pass
+

@@ -329,7 +329,7 @@ if __name__ == '__main__':
         if args.augment_samples:
             n_augment_samples = min(
                 n_pos_samples, 
-                len(train_samples)-n_pos_samples
+                len(train_samples) - n_pos_samples
             ) // 4
             sample_augmentor = SampleAugmentor(
                 sample_file_dir=args.data_dir, 
@@ -409,7 +409,6 @@ if __name__ == '__main__':
                                ner_id2label=ner_id2label)
     
     if args.inv_test:
-        # inv_test_filename = 'inv_test_org.json'
         inv_test_filename = 'inv_test_all.json'
         test_data = Dataset(os.path.join(
             args.data_dir, inv_test_filename))

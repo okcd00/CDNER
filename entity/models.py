@@ -604,7 +604,7 @@ class BertForEntity(BertPreTrainedModel):
             # how many negative spans will be sampled
             if sample_method in ['prop', 'rate', 'rand', 'random']:
                 # k of all span candidates
-                select_count = candidates_counts * sample_hp
+                select_count = int(candidates_counts * sample_hp)
             elif sample_method in ['count', 'counts']:
                 # n samples x k count/sample
                 select_count = int(logits.shape[0] * sample_hp)

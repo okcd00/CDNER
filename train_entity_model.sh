@@ -1,13 +1,15 @@
 task_name=onto4
+
 # --model /data/chendian/pretrained_bert_models/chinese_L-12_H-768_A-12/ \
 # --model /data/chendian/pretrained_bert_models/chinese-macbert-base/ \
-# this time tests 25dim width_embedding.
+# --inv_test  # needs inv_test_all.json in ./data/${task_name}/ 
 
 export PYTHONPATH=.
-CUDA_VISIBLE_DEVICES=2 python run_entity.py \
+CUDA_VISIBLE_DEVICES=3 python run_entity.py \
     --do_train \
     --do_eval \
     --eval_test \
+    --inv_test \
     --take_width_feature True \
     --take_name_module True \
     --take_context_module False \
@@ -21,11 +23,11 @@ CUDA_VISIBLE_DEVICES=2 python run_entity.py \
     --train_batch_size=4 \
     --eval_batch_size=4 \
     --max_span_length=25 \
-    --num_epoch=20 \
+    --num_epoch=10 \
     --print_loss_step=500 \
     --context_window=0 \
-    --filtering_strategy ratio-20 \
-    --model /data/chendian/pretrained_bert_models/chinese-macbert-base/ \
+    --filtering_strategy prop-1.0 \
+    --model /data/chendian/pretrained_bert_models/chinese_L-12_H-768_A-12/ \
     --task ${task_name} \
     --data_dir ./data/${task_name} \
-    --output_dir /data/chendian/pure_output_dir/${task_name}_macB_ratio20_230101 \
+    --output_dir /data/chendian/pure_output_dir/${task_name}_Bn_prop1_230208 \

@@ -8,8 +8,12 @@
 #   desc     : generate training data group by generating methods.
 #              for the new data-flow design on Dec.18 2020
 # ==========================================================================
+import time
+import pickle
+import random
+import numpy as np
 from data_utils import *
-from utie.vocab import CharVocabBert
+from modules.vocab import CharVocabBert
 
 
 class DataGenerator(Database):
@@ -99,7 +103,7 @@ class DataGenerator(Database):
                     del self.entity_case[k][""]
         else:
             print("Now generating entity_library for database {}. {}".format(
-                self.database_path, get_cur_time(8)))
+                self.database_path, time.ctime()))
             self.entity_case = {}
             for s_idx, sample in tqdm(enumerate(self)):
                 words = sample['words']

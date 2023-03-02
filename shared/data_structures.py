@@ -3,9 +3,8 @@ This code is based on DYGIE++'s codebase
 """
 import json
 import copy
-import os
-from collections import Counter
 import numpy as np
+from collections import Counter
 
 import torch
 from torch.utils.data import DataLoader, TensorDataset

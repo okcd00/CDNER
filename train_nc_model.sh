@@ -4,7 +4,7 @@ score_threshold=250
 fusion_method=none
 
 export PYTHONPATH=.
-CUDA_VISIBLE_DEVICES=4 python run_entity.py \
+CUDA_VISIBLE_DEVICES=7 python run_entity.py \
     --do_train \
     --do_eval \
     --eval_test \
@@ -12,8 +12,8 @@ CUDA_VISIBLE_DEVICES=4 python run_entity.py \
     --take_width_feature True \
     --take_name_module True \
     --take_context_module True \
-    --take_context_attn False \
-    --take_alpha_loss False \
+    --take_context_attn True \
+    --take_alpha_loss True \
     --augment_samples True \
     --fusion_method ${fusion_method} \
     --boundary_token both \

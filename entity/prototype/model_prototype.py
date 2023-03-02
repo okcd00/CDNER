@@ -13,8 +13,8 @@ from torch import nn
 import numpy as np
 from torch_common import to_variable, gen_mask
 from modules.bi_affine import Biaffine
-from modules.MultiTailBert import MultiTailBert
-from modules.UTIEBert import UTIEBert, UTIECompress  # UTIECompress = Linear + ReLU
+from entity.prototype.multi_tail_bert import MultiTailBert
+from entity.prototype.utie_bert import UTIEBert, UTIECompress  # UTIECompress = Linear + ReLU
 from anywhere import PRETRAINED_PATH, TARGET_CLASSES, TAIL_NAMES
 
 

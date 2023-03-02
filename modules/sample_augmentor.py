@@ -10,7 +10,6 @@
 import os
 import copy
 import json
-import torch
 import pickle
 import random
 import numpy as np
@@ -89,6 +88,7 @@ class SampleAugmentor(object):
         data = Dataset(jsonl_path)
         
         import numpy as np
+        from modules.span_filter import SpanFilter
         span_filter = SpanFilter(
             ner_label2id=self.ner_label2id or ner_label2id,
             max_span_length=25,
